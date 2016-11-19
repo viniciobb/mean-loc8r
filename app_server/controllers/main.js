@@ -1,4 +1,4 @@
 
 module.exports.index = function(req, res, next) {
-  res.render('index', { title: 'Emmanuelle' });
+  res.render('index', { title: 'Vinicio' });
 };
