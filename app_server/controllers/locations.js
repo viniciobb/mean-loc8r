@@ -2,7 +2,7 @@
 /* GET 'home' page using index extending layout*/
 
 module.exports.homeList = function(req, res, next) {
-  res.render('index', { title: 'Home' });
+  res.render('locations-list', { title: 'Home' });
 };
 
 /* GET 'Location info' page using index extending layout*/
