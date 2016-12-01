@@ -61,7 +61,7 @@ module.exports.locationInfo = function(req, res, next) {
                                    }  
 
                                 ]
-                              });
+                              });   
 };
 
 /* GET 'Add review' page using index extending layout*/
