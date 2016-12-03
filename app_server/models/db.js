@@ -1,6 +1,9 @@
+
 var mongoose = require('mongoose');
 var gracefulShutDown;
 var dbURI = 'mongodb://localhost:27017/loc8r';
+if(process.env.NODE_ENV == "production")
+    dbURI= process.env.MONGOLAB_URI;
 var readline = require('readline');
 mongoose.connect(dbURI);
 
@@ -71,5 +74,5 @@ process.once('SIGTERM',function(){
 
 });
 
-
+require('./locations');
 
