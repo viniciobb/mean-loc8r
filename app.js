@@ -9,9 +9,10 @@ var bodyParser = require('body-parser');
  *  
  *  connection to database mongoDB 
  */
-require('./app_server/models/db'); 
+require('./app_api/models/db'); 
 
-var index = require('./app_server/routes/index');
+var routes = require('./app_server/routes/index');
+var routesApi = require('./app_api/routes/index');
 var users = require('./app_server/routes/users');
 
 
@@ -29,10 +30,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/location', index);
-app.use('/others', index);
-app.use('/cool', index);
+
+app.use('/api', routesApi);
+app.use('/', routes);
+app.use('/location', routes);
+app.use('/others', routes);
+app.use('/cool', routes);
 app.use('/users', users);
 
 
