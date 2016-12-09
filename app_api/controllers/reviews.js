@@ -5,6 +5,7 @@ router.put('/locations/:locationId/reviews/:reviewId', ctrlReviews.reviewsUpdate
 router.delete('/locations/:locationId/reviews/:reviewId', ctrlReviews.reviewsDeleteOne);
 
 */
+
 var mongoose = require('mongoose');
 var modelLocation = mongoose.model("Location"); 
 
@@ -22,10 +23,9 @@ module.exports.reviewsCreate = function(req, res, next) {
 module.exports.reviewsReadOne = function(req, res, next) {
     if(req.params && req.params.locationId && req.params.reviewId){
 
-        modelLocation.findById(req.params.locationId)
-                 .select("name , reviews")
-                 .exec(function (err, location){
-                     var response, review;
+        modelLocation.findById(req.params.locationId,
+                 function (err, location){
+                     var response, review; 
                      if(!location){
                         sendJsonResponse(res,404,{"message" : "locationid not found."});
                         return;                         
@@ -34,47 +34,24 @@ module.exports.reviewsReadOne = function(req, res, next) {
                          return;
                      }
                      if(location.reviews && location.reviews.length > 0){
-                         
-                         console.log(location.reviews);
+                         review = location.reviews.id(req.params.reviewId);
+                         if(!review){
+                             sendJsonResponse(res,404,{"message" : "reviewid "+req.params.reviewId+" not found."});
+                         }else{
+                            response = {
 
-                         location.reviews.forEach(function(reviewItem) {
-                             //console.log("for");
-                             //console.log("reviewItem");
-                             //console.log(reviewItem);
-                             //console.log("reviewItem.id");
-                             //console.log(reviewItem.id);
-                             //console.log("reviewItem.author");
-                             //console.log(reviewItem.author);
-                             //console.log("req.params.reviewId");
-                             //console.log(req.params.reviewId);
-                             
-                             console.log("reviewItem.id");
-                             console.log(reviewItem.id);
+                                location : {
 
-                            if(reviewItem.id.toHexString() == req.params.reviewId){
+                                    name : location.name,
+                                    id : req.params.locationId
 
-                                review = reviewItem;
-                                
-                                response = {
+                                },
+                                review : review
+                            };
 
-                                    location : {
+                            sendJsonResponse(res,200,response);
 
-                                        name : location.name,
-                                        id : req.params.locationId
-
-                                    },
-                                    review : review
-                                };
-
-                                sendJsonResponse(res,200,response);
-
-                            }
-
-                         });
-
-                         if(!review)
-                           sendJsonResponse(res,404,{"message" : "reviewid "+req.params.reviewId+" not found."});
-
+                         }
                      }else{
 
                          sendJsonResponse(res,404,{"message" : "Reviews not found"});
