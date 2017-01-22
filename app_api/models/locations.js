@@ -15,13 +15,20 @@ var reviewSchema = new mongoose.Schema({
     
 });
 
+var coordenateSchema = new mongoose.Schema({
+    name : { type : String, require: true }, 
+    // name : { type: String, "default" : 0 } para estabelecer valores default  
+    coords : {type : [Number], index: '2dsphere'}
+    // index 2dsphere -> mongo faz cálculos geométricos baseados em um objeto esférico->  geoJSON -> longitude/latitude 
+});
+
 var locationSchema = new mongoose.Schema({
     name : { type : String, require: true }, 
     // name : { type: String, "default" : 0 } para estabelecer valores default  
     address: String, 
-    rating: Number, // {type: Number , default: 0 , min: 0 , max: 5}
+    rating: {type: Number , default: 0 , min: 0 , max: 5},
     facilities: [String],
-    coords : {type : [Number], index: '2dsphere'},
+    coords : {type : [Number], index: '2dsphere', require: true},
     openingTimes : [openingTimeSchema],
     reviews : [reviewSchema]
 
@@ -29,3 +36,4 @@ var locationSchema = new mongoose.Schema({
 });
 
 mongoose.model('Location', locationSchema);
+mongoose.model('Coordenate', coordenateSchema);

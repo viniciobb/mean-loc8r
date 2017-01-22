@@ -2,6 +2,7 @@
 /* GET 'home' page using index extending layout*/
 
 module.exports.homeList = function(req, res, next) {
+  
   res.render('location-list', { title: 'Loc8r - find a place to work with wifi',
                                 pageHeader : { 
                                   title : "Loc8r",
