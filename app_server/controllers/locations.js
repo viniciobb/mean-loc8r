@@ -33,11 +33,7 @@ module.exports.homeList = function(req, res, next) {
 
   });
 
-
-
 };
-
-
 
 var renderHomePage = function(req, res, responseBody) {
   
