@@ -1,7 +1,7 @@
 
 var mongoose = require('mongoose');
 var modelLocation = mongoose.model("Location");
-var modelCoordenate = mongoose.model("Coordenate");
+var modelCoordinate = mongoose.model("Coordenate");
 
 
 var sendJsonResponse = function (res, status, content){
@@ -10,24 +10,6 @@ var sendJsonResponse = function (res, status, content){
     res.json(content);
 
 };
-
-/**var locationSchema = new mongoose.Schema({
-    name : { type : String, require: true }, 
-    // name : { type: String, "default" : 0 } para estabelecer valores default  
-    address: String, 
-    rating: Number, // {type: Number , default: 0 , min: 0 , max: 5}
-    facilities: [String],
-    coords : {type : [Number], index: '2dsphere'},
-    openingTimes : [openingTimeSchema],
-    reviews : [reviewSchema]
-    // index 2dsphere -> mongo faz cálculos geométricos baseados em um objeto esférico->  geoJSON -> longitude/latitude 
-
-     days: {type: String, required: true},
-    opening: String,
-    closing: String,
-    closed: {type: Boolean, required: true}
-
-}); */
 
 // http://localhost:3000/api.loc8r.com/locations
 module.exports.locationsCreate = function(req, res) {
@@ -106,7 +88,7 @@ module.exports.coordenatesListByDistance = function(req, res, next) {
 
    })();
 
-   modelCoordenate.geoNear(point, geoOptions, function(err, results, stats){
+   modelCoordinate.geoNear(point, geoOptions, function(err, results, stats){
        if(err){
           sendJsonResponse(res,404,err);
           return;
@@ -282,17 +264,17 @@ module.exports.locationsDeleteOne = function(req, res) {
        .exec(function (err, location){
             if(!location){
                     sendJsonResponse(res,404,{"message" : "locationid not found."});
-                    return;                         
+
             }else if (err){
                     sendJsonResponse(res,404,err);
-                    return;
+
             }else{
 
                 modelLocation.remove({_id: location._id} ,function (err, location){
 
                     if (err){
                         sendJsonResponse(res,404,err);
-                        return;
+
                     }else{
                         sendJsonResponse(res,204,location);
 

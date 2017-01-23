@@ -7,7 +7,7 @@ block content
         h1= pageHeader.title
           small &nbsp;#{pageHeader.strapline}
   .row
-    .col-xs-12.col-sm-8
+    .col-xs-12.col-sm-6
       .row.list-group
         each location in locations
             .col-xs-12.list-group-item
@@ -21,5 +21,5 @@ block content
                 each facility in location.facilities
                   span.label.label-warning=facility
                    &nbsp;   
-    .col-xs-12.col-sm-8
-      p.lead Looking for wi-fi and a seat ? Loc8r helps you find places to work when out and about. Perhaps with coffee, cake or a o pint ? Let Loc8r help you find the place you´re looking for.           
+    .col-xs-12.col-sm-6
+        p.lead=sidebar             

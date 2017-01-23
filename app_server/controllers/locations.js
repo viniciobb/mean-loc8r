@@ -1,34 +1,54 @@
 
 /* GET 'home' page using index extending layout*/
 
+var request = require('request');
+var apiOptions = {
+  server : "http://localhost:3000"
+};
+  
+if(process.env.NODE_ENV=="production")
+  apiOptions.server = "https://lit-harbor-36974.herokuapp.com";
+
+
 module.exports.homeList = function(req, res, next) {
+  var reqOptions, path;
+  
+  path="/api.loc8r.com/locations";
+
+  requestOptions = {
+    url : apiOptions.server+path,
+    method : "get",
+    json:{},
+    qs: { 
+      lng : -48.02281469,
+      lat : -15.83892242,
+      maxDistance : 10
+    }
+
+  };
+
+  request(requestOptions, function(err,response,body){
+
+      renderHomePage(req, res, body);
+
+  });
+
+
+
+};
+
+
+
+var renderHomePage = function(req, res, responseBody) {
   
   res.render('location-list', { title: 'Loc8r - find a place to work with wifi',
                                 pageHeader : { 
                                   title : "Loc8r",
                                   strapline : 'Find place to work with wifi near you !'
                                 },
-                                locations:[{ 
-                                    name : 'Starbucks',  
-                                    address:'125 Hight Street', 
-                                    rating: 3, 
-                                    facilities: [ 'Hot drinks', 'Food','Premium wifi'],
-                                    distance :'100m'                                           
-                                },  
-                                {
-                                    name : 'Cafe Hero',
-                                    address:'126 Hight Street',  
-                                    rating: 4,  
-                                    facilities: [ 'Hot drinks', 'Food','Premium wifi'],
-                                    distance :'200m'                                         
-                                },
-                                { 
-                                    name : 'Burguer Queen',
-                                    address:'124 Hight Street',
-                                    rating: 2,
-                                    facilities: [ 'Hot drinks', 'Food','Premium wifi'],
-                                    distance :'600m'                                        
-                                }] 
+                                sidebar : "Looking for wi-fi and a seat ? Loc8r helps you find places to work when out and about. Perhaps with coffee, cake or a o pint ? Let Loc8r help you find the place you´re looking for.",
+                                locations: responseBody
+
                               });
 };
 
