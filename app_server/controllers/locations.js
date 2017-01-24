@@ -2,50 +2,89 @@
 /* GET 'home' page using index extending layout*/
 
 var request = require('request');
+
 var apiOptions = {
-  server : "http://localhost:3000"
+  server : "http://localhost:3000",
+  apiAddress : "/api.loc8r.com/"
 };
   
 if(process.env.NODE_ENV=="production")
   apiOptions.server = "https://lit-harbor-36974.herokuapp.com";
 
+var formatDistance = function(distance){
+    
+    distance = 1800.599;    
+    
+    var distanciaFormatada = 0;
+    var unit ="";
+
+    if(distance > 1000){
+       distanciaFormatada =  parseFloat(distance).toFixed(1);          
+       unit = "km";
+    }else{
+        distanciaFormatada = parseInt(distance,10);
+        unit = "m";
+    }    
+
+    return distanciaFormatada+" "+unit;
+
+};
+
 
 module.exports.homeList = function(req, res, next) {
   var reqOptions, path;
-  
-  path="/api.loc8r.com/locations";
 
   requestOptions = {
-    url : apiOptions.server+path,
+    url : apiOptions.server+apiOptions.apiAddress+"locations",
     method : "get",
     json:{},
     qs: { 
       lng : -48.02281469,
       lat : -15.83892242,
-      maxDistance : 10
+      maxDistance : 100
     }
 
   };
-
+  
   request(requestOptions, function(err,response,body){
-
-      renderHomePage(req, res, body);
-
+    console.log(response.statusCode);
+    if(response.statusCode ===200 && body.length){
+       for(var i =0; i<body.length;i++){
+          body[i].distance = formatDistance(body[i].distance);        
+        }
+        renderHomePage(req, res, body);
+    }
   });
 
 };
 
+
+
 var renderHomePage = function(req, res, responseBody) {
   
-  res.render('location-list', { title: 'Loc8r - find a place to work with wifi',
-                                pageHeader : { 
-                                  title : "Loc8r",
-                                  strapline : 'Find place to work with wifi near you !'
-                                },
-                                sidebar : "Looking for wi-fi and a seat ? Loc8r helps you find places to work when out and about. Perhaps with coffee, cake or a o pint ? Let Loc8r help you find the place you´re looking for.",
-                                locations: responseBody
+  var message;
+  
+  if(! ( responseBody instanceof Array)){
+    message = "API lookup error";
+    responseBody = [];
+  }else{
+    if(! responseBody.length){
+      message = "No places found";
+    }
+  } 
 
-                              });
+  res.render('location-list', { title: 'Loc8r - find a place to work with wifi',
+                                  pageHeader : { 
+                                    title : "Loc8r",
+                                    strapline : 'Find place to work with wifi near you !'
+                                  },
+                                  sidebar : "Looking for wi-fi and a seat ? Loc8r helps you find places to work when out and about. Perhaps with coffee, cake or a o pint ? Let Loc8r help you find the place you´re looking for.",
+                                  locations: responseBody,
+                                  message : message
+                                });
+
+
+  
 };
 
 /* GET 'Location info' page using index extending layout*/
