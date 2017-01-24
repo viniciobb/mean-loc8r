@@ -4,16 +4,13 @@
 var request = require('request');
 
 var apiOptions = {
-  server : "http://localhost:3000",
-  apiAddress : "/api.loc8r.com/"
+  server : "http://localhost:3000"
 };
   
 if(process.env.NODE_ENV=="production")
   apiOptions.server = "https://lit-harbor-36974.herokuapp.com";
 
 var formatDistance = function(distance){
-    
-    distance = 1800.599;    
     
     var distanciaFormatada = 0;
     var unit ="";
@@ -35,7 +32,7 @@ module.exports.homeList = function(req, res, next) {
   var reqOptions, path;
 
   requestOptions = {
-    url : apiOptions.server+apiOptions.apiAddress+"locations",
+    url : apiOptions.server+"/api.loc8r.com/locations",
     method : "get",
     json:{},
     qs: { 
@@ -48,7 +45,7 @@ module.exports.homeList = function(req, res, next) {
   
   request(requestOptions, function(err,response,body){
     console.log(response.statusCode);
-    if(response.statusCode ===200 && body.length){
+    if(response.statusCode===200){
        for(var i =0; i<body.length;i++){
           body[i].distance = formatDistance(body[i].distance);        
         }
@@ -62,7 +59,7 @@ module.exports.homeList = function(req, res, next) {
 
 var renderHomePage = function(req, res, responseBody) {
   
-  var message;
+  var message="";
   
   if(! ( responseBody instanceof Array)){
     message = "API lookup error";
