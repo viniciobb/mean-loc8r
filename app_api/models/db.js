@@ -55,14 +55,14 @@ gracefulShutDown = function(msg, callback){
 process.once('SIGUSR2',function(){
     gracefulShutDown('nodemon restart',function(){
         process.kill(process.pid, 'SIGUSR2');
-    })
+    });
 
 });
 
 process.once('SIGINT',function(){
     gracefulShutDown('app termination',function(){
         process.exit(0);
-    })
+    });
 
 });
 
@@ -70,7 +70,7 @@ process.once('SIGINT',function(){
 process.once('SIGTERM',function(){
     gracefulShutDown('Heroku app shutdown',function(){
         process.exit(0);
-    })
+    });
 
 });
 
